@@ -1,7 +1,7 @@
 #Python
 from datetime import date, datetime
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 #Pydantic
 from pydantic import BaseModel
@@ -10,10 +10,13 @@ from pydantic import Field
 
 #FastAPI
 from fastapi import FastAPI
+from fastapi import status
 
 app = FastAPI()
 
-# Models
+#//////////////////////////
+#         Models
+#//////////////////////////
 
 #id - email
 class UserBase(BaseModel):
@@ -41,6 +44,7 @@ class User(UserBase): #Hereda de Userbase.
     )
     birth_date: Optional[date] = Field(default=None)
 
+#tweets
 class Tweet(BaseModel):
     tweet_id: UUID = Field(...)
     content: str = Field(
@@ -52,8 +56,84 @@ class Tweet(BaseModel):
     update_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
 
+#//////////////////////////
+#     Path Operations
+#//////////////////////////
 
+
+#home
 @app.get(path="/")
 def home():
     return{"Twitter API": "Working!"}
+
+
+##---Users---
+
+#Registrar Usuario
+@app.post(
+    path="/signup",
+    response_model=User,
+    status_code=status.HTTP_201_CREATED,
+    summary="Register a User",
+    tags=["Users"]
+)
+def signup():
+    pass
+
+#Login de Usuario
+@app.post(
+    path="/login",
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary="Login a User",
+    tags=["Users"]
+)
+def login():
+    pass
+
+#Mostrar listado de usuarios
+@app.get(
+    path="/users",
+    response_model=List[User],
+    status_code=status.HTTP_200_OK,
+    summary="Show all Users",
+    tags=["Users"]
+)
+def show_all_users():
+    pass
+
+#Mostrar usuario especifico
+@app.get(
+    path="/users/{user_id}",
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary="Show a User",
+    tags=["Users"]
+)
+def show_a_user():
+    pass
+
+#Borrar un usuario
+@app.delete(
+    path="/users/{user_id}/delete",
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary="Delete a User",
+    tags=["Users"]
+)
+def delete_a_user():
+    pass
+
+#Actualizar un usuario
+@app.put(
+    path="/users/{user_id}/update",
+    response_model=User,
+    status_code=status.HTTP_200_OK,
+    summary="Update a User",
+    tags=["Users"]
+)
+def update_a_user():
+    pass
+
+##---tweets---
 
