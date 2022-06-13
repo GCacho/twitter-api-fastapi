@@ -61,7 +61,7 @@ class Tweet(BaseModel):
         max_length=256
     ) 
     created_at: datetime = Field(default=datetime.now())
-    update_at: Optional[datetime] = Field(default=None)
+    updated_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
 
 
@@ -83,10 +83,10 @@ def home():
     path="/signup",
     response_model=User,
     status_code=status.HTTP_201_CREATED,
-    summary="Register a User",
+    summary="Register an user",
     tags=["Users"]
 )
-def signup(user: UserRegister = Body(...)):
+def signup(user: UserRegister = Body(...)): #fallo en mandar datos a json.
     """
     Signup a User
 
@@ -101,16 +101,16 @@ def signup(user: UserRegister = Body(...)):
         - email: Emailstr
         - first_name: str
         - last_name: str
-        - bird_date: date
+        - birth_date: date
     """
-    with open("users.json", "r+", encoding="utf8") as f: #para abrir un archivo extra, volverlo de lectura y escritura y que acepte tipografía español
+    with open("users.json", "r+", encoding="utf-8") as f: #para abrir un archivo extra, volverlo de lectura y escritura y que acepte tipografía español
         results = json.loads(f.read()) #json.loads toma un string y lo convierte a json
         user_dict = user.dict() #convierte el body a un diccionario / se necesita importar el body
         user_dict["user_id"] = str(user_dict["user_id"])
-        user_dict["bird_date"] = str(user_dict["birth_date"])
-        results.append(user_dict) #anda fallando el append
+        user_dict["birth_date"] = str(user_dict["birth_date"])
+        results.append(user_dict)
         f.seek(0) #Regresa para remplazar la lista original.
-        f.write(json.dumps(results)) #lo retransforma a json
+        f.write(json.dumps(results)) #lo retransforma a json <Error aqui>
         return user
 
 ### Login de Usuario / User Login
@@ -133,7 +133,22 @@ def login():
     tags=["Users"]
 )
 def show_all_users():
-    pass
+    """
+    This path operation shows all userts in the app
+
+    Parameters:
+        -
+    
+    Returns a json list with all users in the app, whith the following keys
+        - user_id: UUID
+        - email: Emailstr
+        - first_name: str
+        - last_name: str
+        - bird_date: date
+    """
+    with open("users.json", "r", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        return results
 
 ### Mostrar usuario especifico / Show specific user
 @app.get(
@@ -189,8 +204,36 @@ def home1():
     summary="Post a tweet",
     tags=["Tweets"]
 )
-def post():
-    pass
+def post(tweet: Tweet = Body(...)):
+    """
+    Post a Tweet
+
+    This path operation post a tweet in the app
+
+    Parameters:
+        - Request body parameter
+            - user: Tweet
+
+   Returns a json with the basic tweet information:
+        - tweet_id: UUID 
+        - content: str
+        - created_at: datetime 
+        - update_at: Optional[datetime] 
+        - by: User
+    """
+    with open("tweets.json", "r+", encoding="utf-8") as f: #para abrir un archivo extra, volverlo de lectura y escritura y que acepte tipografía español
+        results = json.loads(f.read()) #json.loads toma un string y lo convierte a json
+        tweet_dict = tweet.dict() #convierte el body a un diccionario / se necesita importar el body
+        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"])
+        tweet_dict["created_at"] = str(tweet_dict["created_at"])
+        tweet_dict["updated_at"] = str(tweet_dict["updated_at"])
+        tweet_dict["by"]["user_id"] = str(tweet_dict["by"]["user_id"])
+        tweet_dict["by"]["birth_date"] = str(tweet_dict["by"]["birth_date"])
+
+        results.append(tweet_dict)
+        f.seek(0) #Regresa para remplazar la lista original.
+        f.write(json.dumps(results)) #lo retransforma a json <Error aqui>
+        return tweet
 
 ### Mostrar un tweet / Show a tweet
 @app.get(

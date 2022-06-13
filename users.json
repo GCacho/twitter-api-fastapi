@@ -1,1 +1,31 @@
-[]
+[
+    {
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "guillermo.cacho@gmail.com",
+        "first_name": "Guillermo",
+        "last_name": "Cacho",
+        "birth_date": "1995-09-24"
+    },
+    {
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "santiago.cacho@gmail.com",
+        "first_name": "Santiago",
+        "last_name": "Cacho",
+        "birth_date": "1998-05-25"
+    },
+    {
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "paola.perez@gmail.com",
+        "first_name": "Paola",
+        "last_name": "Perez",
+        "birth_date": "1996-08-08"
+    },
+    {
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "pepe@gmail.com.com",
+        "password": "holaestaesmipassword",
+        "first_name": "pepe",
+        "last_name": "papas",
+        "birth_date": "1991-06-13"
+    }
+]
