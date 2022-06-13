@@ -18,19 +18,19 @@ app = FastAPI()
 #         Models
 #//////////////////////////
 
-#id - email
+## id - email
 class UserBase(BaseModel):
     user_id: UUID = Field(...) # UUID - Universal Unic ID
     email: EmailStr = Field(...)
 
-#password
+## password
 class UserLogin(UserBase): #Hereda de Userbase.
     password: str = Field(
         ..., 
         min_length=8
     )
 
-#name and lastname
+## name and lastname
 class User(UserBase): #Hereda de Userbase.
     first_name: str = Field(
         ...,
@@ -44,7 +44,7 @@ class User(UserBase): #Hereda de Userbase.
     )
     birth_date: Optional[date] = Field(default=None)
 
-#tweets
+##tweets
 class Tweet(BaseModel):
     tweet_id: UUID = Field(...)
     content: str = Field(
@@ -55,6 +55,7 @@ class Tweet(BaseModel):
     created_at: datetime = Field(default=datetime.now())
     update_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
+
 
 #//////////////////////////
 #     Path Operations
@@ -69,7 +70,7 @@ def home():
 
 ##---Users---
 
-#Registrar Usuario
+### Registrar Usuario / User registation
 @app.post(
     path="/signup",
     response_model=User,
@@ -80,7 +81,7 @@ def home():
 def signup():
     pass
 
-#Login de Usuario
+### Login de Usuario / User Login
 @app.post(
     path="/login",
     response_model=User,
@@ -91,7 +92,7 @@ def signup():
 def login():
     pass
 
-#Mostrar listado de usuarios
+### Mostrar listado de usuarios / Show user list
 @app.get(
     path="/users",
     response_model=List[User],
@@ -102,7 +103,7 @@ def login():
 def show_all_users():
     pass
 
-#Mostrar usuario especifico
+### Mostrar usuario especifico / Show specific user
 @app.get(
     path="/users/{user_id}",
     response_model=User,
@@ -113,7 +114,7 @@ def show_all_users():
 def show_a_user():
     pass
 
-#Borrar un usuario
+### Borrar un usuario / Delete User
 @app.delete(
     path="/users/{user_id}/delete",
     response_model=User,
@@ -124,7 +125,7 @@ def show_a_user():
 def delete_a_user():
     pass
 
-#Actualizar un usuario
+### Actualizar un usuario / Update User
 @app.put(
     path="/users/{user_id}/update",
     response_model=User,
@@ -137,3 +138,57 @@ def update_a_user():
 
 ##---tweets---
 
+### Mostrar todos los tweets / Show all tweets
+@app.get(
+    path="/",
+    response_model=List[Tweet], #Para mostrar todos los tweets
+    status_code=status.HTTP_200_OK,
+    summary="Show all tweets",
+    tags=["Tweets"]
+)
+def home():
+    return {"Twitter API": "Working!"}
+
+### Publicar un tweet / Post a tweet
+@app.post(
+    path="/post",
+    response_model=Tweet,
+    status_code=status.HTTP_201_CREATED,
+    summary="Post a tweet",
+    tags=["Tweets"]
+)
+def post():
+    pass
+
+### Mostrar un tweet / Show a tweet
+@app.get(
+    path="/tweets/{tweet_id}",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Show a tweet",
+    tags=["Tweets"]
+)
+def show_a_tweet():
+    pass
+
+### Borrar un tweet / Delete a tweet
+@app.delete(
+    path="/tweets/{tweet_id}/delete",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Delete a tweet",
+    tags=["Tweets"]
+)
+def delete_a_tweet():
+    pass
+
+### Actualizar un tweet / Update a tweet
+@app.put(
+    path="/tweets/{tweet_id}/update",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Update a tweet",
+    tags=["Tweets"]
+)
+def update_a_tweet():
+    pass
