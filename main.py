@@ -27,7 +27,16 @@ class UserBase(BaseModel):
 class UserLogin(UserBase): #Hereda de Userbase.
     password: str = Field(
         ..., 
-        min_length=8
+        min_length=8,
+        max_length=64
+    )
+
+## user password for registation
+class UserRegister(User):
+        password: str = Field(
+        ..., 
+        min_length=8,
+        max_length=64
     )
 
 ## name and lastname
@@ -79,7 +88,22 @@ def home():
     tags=["Users"]
 )
 def signup():
-    pass
+    """
+    Signup a User
+    
+    This path operation registers a user in the app
+
+    Parameters:
+        - Request body parameter
+            - user: UserRegister
+
+    Returns a json with the basic user information:
+        - user_id: UUID
+        - email: Emailstr
+        - first_name: str
+        - last_name: str
+        - bird_date: str
+    """
 
 ### Login de Usuario / User Login
 @app.post(
