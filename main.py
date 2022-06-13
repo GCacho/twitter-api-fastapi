@@ -64,6 +64,10 @@ class Tweet(BaseModel):
     updated_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
 
+#home
+@app.get(path="/")
+def home():
+    return{"Twitter API": "Working!"}
 
 #//////////////////////////
 #     Path Operations
