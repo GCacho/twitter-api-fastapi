@@ -1,6 +1,8 @@
 #Python
-from datetime import date, datetime
+import json
 from uuid import UUID
+from datetime import date
+from datetime import datetime
 from typing import Optional, List
 
 #Pydantic
@@ -11,6 +13,7 @@ from pydantic import Field
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
+from fastapi import Body
 
 app = FastAPI()
 
@@ -31,14 +34,6 @@ class UserLogin(UserBase): #Hereda de Userbase.
         max_length=64
     )
 
-## user password for registation
-class UserRegister(User):
-        password: str = Field(
-        ..., 
-        min_length=8,
-        max_length=64
-    )
-
 ## name and lastname
 class User(UserBase): #Hereda de Userbase.
     first_name: str = Field(
@@ -52,6 +47,10 @@ class User(UserBase): #Hereda de Userbase.
         max_length=50
     )
     birth_date: Optional[date] = Field(default=None)
+
+## user password for registation
+class UserRegister(User, UserLogin):
+        pass 
 
 ##tweets
 class Tweet(BaseModel):
@@ -87,23 +86,32 @@ def home():
     summary="Register a User",
     tags=["Users"]
 )
-def signup():
+def signup(user: UserRegister = Body(...)):
     """
     Signup a User
-    
+
     This path operation registers a user in the app
 
     Parameters:
         - Request body parameter
             - user: UserRegister
 
-    Returns a json with the basic user information:
+   Returns a json with the basic user information:
         - user_id: UUID
         - email: Emailstr
         - first_name: str
         - last_name: str
-        - bird_date: str
+        - bird_date: date
     """
+    with open("users.json", "r+", encoding="utf8") as f: #para abrir un archivo extra, volverlo de lectura y escritura y que acepte tipografía español
+        results = json.loads(f.read()) #json.loads toma un string y lo convierte a json
+        user_dict = user.dict() #convierte el body a un diccionario / se necesita importar el body
+        user_dict["user_id"] = str(user_dict["user_id"])
+        user_dict["bird_date"] = str(user_dict["birth_date"])
+        results.append(user_dict) #anda fallando el append
+        f.seek(0) #Regresa para remplazar la lista original.
+        f.write(json.dumps(results)) #lo retransforma a json
+        return user
 
 ### Login de Usuario / User Login
 @app.post(
@@ -170,7 +178,7 @@ def update_a_user():
     summary="Show all tweets",
     tags=["Tweets"]
 )
-def home():
+def home1():
     return {"Twitter API": "Working!"}
 
 ### Publicar un tweet / Post a tweet
